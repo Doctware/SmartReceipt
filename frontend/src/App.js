@@ -21,7 +21,7 @@ const APP = () => {
           <Route path="/" element={<LoginPage></LoginPage>}></Route>
           <Route path="/signup" element={<SignUp></SignUp>}></Route>
           <Route path="/loginpage" element={<LoginPage></LoginPage>}></Route>
-          <Route path="/dashboard" element={<UserDashboard />} />
+          <Route path="/UserDashboard" element={<UserDashboard />} />
           <Route path="/header" element={<Header></Header>} />
           <Route path="/logout" element={<Navigate to="/" replace />} onEnter={() => {
             localStorage.clear();

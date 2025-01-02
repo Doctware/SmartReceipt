@@ -1,8 +1,16 @@
 import React from "react";
 import "./Auth.css"; // Optional for custom styles
 import logo from "./assets/logo.jpg"; // Correctly importing the logo
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+    const navigate = useNavigate();
+
+    const handleLoginPage = (event) => {
+        event.preventDefault(); // Prevent form submission
+        navigate("/UserDashboard"); // Navigate to the UserDashboard page
+    };
+
     return (
         <div className="container-fluid vh-100 d-flex align-items-center justify-content-center">
             <div className="row w-100">
@@ -20,7 +28,7 @@ const LoginPage = () => {
                 {/* Right Side: Login Form */}
                 <div className="col-md-6 d-flex flex-column align-items-center justify-content-center">
                     <h2 className="mb-4">Login</h2>
-                    <form className="w-75">
+                    <form className="w-75" onSubmit={handleLoginPage}>
                         <div className="mb-3">
                             <label htmlFor="email" className="form-label">
                                 Email address
@@ -47,7 +55,9 @@ const LoginPage = () => {
                             Login
                         </button>
                     </form>
-                    <p>Don't have an account?<a href="/SignUp">Register</a></p>
+                    <p>
+                        Don't have an account? <a href="/SignUp">Register</a>
+                    </p>
                 </div>
             </div>
         </div>
