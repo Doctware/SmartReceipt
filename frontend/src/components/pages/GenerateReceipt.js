@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
-import './GenerateReceipt.css';
+import React, { useState } from "react";
+import Receipt from "./Receipt";
+import "./GenerateReceipt.css";
 
 const GenerateReceipt = () => {
     const [formData, setFormData] = useState({
-        buyerName: '',
-        productName: '',
-        amount: '',
-        description: '',
-        date: ''
+        buyerName: "",
+        productName: "",
+        amount: "",
+        description: "",
     });
+
+    const [showReceipt, setShowReceipt] = useState(false);
+    // const [seller, setSeller] = useState({
+    //     name: "John Doe", // Mock data; replace with fetched data
+    //     email: "john.doe@example.com",
+    // });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -17,53 +23,68 @@ const GenerateReceipt = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        alert('Receipt Generated!'); // Replace with backend logic
+
+        // Here, you would typically send data to the backend
+        setShowReceipt(true); // Show receipt after submitting
+    };
+
+    const handleBack = () => {
+        setShowReceipt(false);
     };
 
     return (
         <div className="generate-receipt">
-            <h2>Generate Receipt</h2>
-            <form onSubmit={handleSubmit}>
-                <label>Buyer's Name</label>
-                <input
-                    type="text"
-                    name="recipientName"
-                    value={formData.recipientName}
-                    onChange={handleChange}
-                    required
+            {showReceipt ? (
+                <Receipt
+                    buyer={formData.buyerName}
+                    // seller={`${seller.name} (${seller.email})`}
+                    productName={formData.productName}
+                    amount={parseFloat(formData.amount)}
+                    description={formData.description}
+                    onBack={handleBack}
                 />
+            ) : (
+                <form onSubmit={handleSubmit}>
+                    <h2>Generate Receipt</h2>
 
-                <label>Product's Name</label>
-                <input type="VARCHAR" name='productName' value={formData.recipientName} onChange={handleChange} required />
+                    <label>Buyer's Name</label>
+                    <input
+                        type="text"
+                        name="buyerName"
+                        value={formData.buyerName}
+                        onChange={handleChange}
+                        required
+                    />
 
-                <label>Amount</label>
-                <input
-                    type="number"
-                    name="amount"
-                    value={formData.amount}
-                    onChange={handleChange}
-                    required
-                />
+                    <label>Product Name</label>
+                    <input
+                        type="text"
+                        name="productName"
+                        value={formData.productName}
+                        onChange={handleChange}
+                        required
+                    />
 
-                <label>Description</label>
-                <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    required
-                ></textarea>
+                    <label>Amount</label>
+                    <input
+                        type="number"
+                        name="amount"
+                        value={formData.amount}
+                        onChange={handleChange}
+                        required
+                    />
 
-                <label>Date</label>
-                <input
-                    type="date"
-                    name="date"
-                    value={formData.date}
-                    onChange={handleChange}
-                    required
-                />
+                    <label>Description</label>
+                    <textarea
+                        name="description"
+                        value={formData.description}
+                        onChange={handleChange}
+                        required
+                    ></textarea>
 
-                <button type="submit">Generate</button>
-            </form>
+                    <button type="submit">Generate</button>
+                </form>
+            )}
         </div>
     );
 };

@@ -8,7 +8,7 @@ const Header = () => {
             <img src={logo} alt="Smart Receipt Logo" className="logo" />
             <nav>
                 <ul>
-                    <li><a href="/Dashboard">Dashboard</a></li>
+                    <li><a href="/UserDashboard">Dashboard</a></li>
                     <li><a href="/generate-receipt">Generate Receipt</a></li>
                     <li><a href="/receipt-history">History</a></li>
                     <li><a href="/profile">Profile</a></li>
