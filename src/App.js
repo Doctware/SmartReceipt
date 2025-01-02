@@ -7,6 +7,10 @@ import Header from "./components/Header";
 import LoginPage from "./components/LoginPage";
 import SignUp from "./components/SignUp";
 import UserDashboard from "./components/pages/UserDashboard";
+import { Navigate } from "react-router-dom";
+import GenerateReceipt from "./components/pages/GenerateReceipt";
+import Profile from "./components/pages/Profile";
+
 
 const APP = () => {
   return (
@@ -19,6 +23,11 @@ const APP = () => {
           <Route path="/loginpage" element={<LoginPage></LoginPage>}></Route>
           <Route path="/dashboard" element={<UserDashboard />} />
           <Route path="/header" element={<Header></Header>} />
+          <Route path="/logout" element={<Navigate to="/" replace />} onEnter={() => {
+            localStorage.clear();
+          }} />
+          <Route path="/generate-receipt" element={<GenerateReceipt></GenerateReceipt>} />
+          <Route path="/profile" element={<Profile></Profile>} />
         </Routes>
       </div>
       <Footer></Footer>
