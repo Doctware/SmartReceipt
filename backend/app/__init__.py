@@ -35,7 +35,7 @@ def create_app():
     from routes.seller_routes import seller_bp
     from routes.auth_routes import auth_bp
 
-    app.register_blueprint(seller_bp, url_prefix='/seller')
+    app.register_blueprint(seller_bp, url_prefix='/api/vs1.0/seller')
     app.register_blueprint(auth_bp, url_prefix='/auth')
 
     return app
