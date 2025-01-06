@@ -17,6 +17,7 @@ bcrypt = Bcrypt()
 limiter = Limiter(key_func=get_remote_address, app=None)
 login_manager = LoginManager()
 
+
 def create_app():
     """ creating application """
     app = Flask(__name__)
