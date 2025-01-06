@@ -9,17 +9,17 @@ class Receipt(db.Model):
     """ the receipt model """
     __tablename__ = 'receipts'
 
-    id = db.Column(db.String(36), primary_key=True, default=str(uuid.uuid4))
+    id = db.Column(db.String(36), primary_key=True, default=str(uuid.uuid4()))
     item_name = db.Column(db.String(120), nullable=False)
     amount = db.Column(db.Integer, nullable=False)
     date_sold = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     business_name = db.Column(db.String(120), nullable=True)
     address = db.Column(db.String(250), nullable=False)
     access_code = db.Column(db.String(8), unique=True, nullable=False)
-    buyer_signature = db.Column(db.String(120), nullable=False)
+    buyer_signature = db.Column(db.String(120), nullable=True)
     locked = db.Column(db.Boolean, default=False, nullable=False)
 
-    seller_id = db.Column(db.String(36), db.ForeinKey('users.id'), nullable=False)
+    seller_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
 
     def __init__(self, item_name, amount, address, seller_id, business_name=None):
         """ insialzing provided input """
@@ -31,10 +31,10 @@ class Receipt(db.Model):
         self.businaess_name = business_name
         self.access_code = self.generate_access_code()
 
-        def generate_access_code(self):
-            """ Generate a unique 8-caharcter access code. """
-            return str(uuid.uuid4())[:8]
+    def generate_access_code(self):
+        """ Generate a unique 8-caharcter access code. """
+        return str(uuid.uuid4())[:8]
 
-        def lock_receipt(self):
-            """ locking receipt to prevent futher editing """
-            self.locked = True
+    def lock_receipt(self):
+        """ locking receipt to prevent futher editing """
+        self.locked = True

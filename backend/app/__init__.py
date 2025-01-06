@@ -22,7 +22,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object('config.Config')
 
-    # Insializing available extention
+    # Inisializing available extention
     db.init_app(app)
     jwt.init_app(app)
     bcrypt.init_app(app)
@@ -34,8 +34,10 @@ def create_app():
     """ Registering available blue print """
     from routes.seller_routes import seller_bp
     from routes.auth_routes import auth_bp
+    from routes.receipt_routes import receipt_bp
 
-    app.register_blueprint(seller_bp, url_prefix='/api/vs1.0/seller')
-    app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(seller_bp, url_prefix='/api/v1s.0/seller')
+    app.register_blueprint(auth_bp, url_prefix='/api/v1s.0/auth')
+    app.register_blueprint(receipt_bp, url_prefix='/api/v1s.0/receipt')
 
     return app
