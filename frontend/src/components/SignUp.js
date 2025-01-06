@@ -32,7 +32,7 @@ const SignUp = () => {
         };
 
         try {
-            const response = await axios.post("http://127.0.0.1:5000/api/register", userData, {
+            const response = await axios.post("http://127.0.0.1:5000/auth/register", userData, {
                 headers: { "Content-Type": "application/json" },
             });
             alert(response.data.message); // Show success message
