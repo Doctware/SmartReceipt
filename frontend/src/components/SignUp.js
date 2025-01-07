@@ -4,11 +4,10 @@ import axios from "axios";
 import logo from "./assets/logo.jpg"; // Correctly importing the logo
 
 const SignUp = () => {
-    const [userType, setUserType] = useState("individual"); // "individual" or "business"
     const [fullName, setFullName] = useState(""); // Full name
-    const [businessName, setBusinessName] = useState(""); // Business name
+    const [businessName, setBusinessName] = useState(""); // Business name (optional)
     const [address, setAddress] = useState(""); // Address
-    const [poBox, setPoBox] = useState(""); // PO Box
+    const [poBox, setPoBox] = useState(""); // PO Box (optional)
     const [email, setEmail] = useState(""); // Email address
     const [password, setPassword] = useState(""); // Password
     const [confirmPassword, setConfirmPassword] = useState(""); // Confirm Password
@@ -24,7 +23,7 @@ const SignUp = () => {
 
         const userData = {
             full_name: fullName,
-            business_name: userType === "business" ? businessName : null,
+            business_name: businessName || null, // Nullable field
             address: address,
             po_box: poBox || null, // Nullable field
             email: email,
@@ -32,7 +31,7 @@ const SignUp = () => {
         };
 
         try {
-            const response = await axios.post("http://127.0.0.1:5000/auth/register", userData, {
+            const response = await axios.post("http://127.0.0.1:5003/api/v1s.0/seller/register", userData, {
                 headers: { "Content-Type": "application/json" },
             });
             alert(response.data.message); // Show success message
@@ -46,16 +45,7 @@ const SignUp = () => {
         <div className="auth-form">
             <form onSubmit={handleSubmit} className="auth-form">
                 <img src={logo} alt="Logo" className="auth-logo" />
-                <h2>Register</h2>
-                
-                {/* User Type */}
-                <label>
-                    User Type:
-                    <select value={userType} onChange={(e) => setUserType(e.target.value)}>
-                        <option value="individual">Individual</option>
-                        <option value="business">Business</option>
-                    </select>
-                </label>
+                <h2>Register and Be a Smart User</h2>
                 
                 {/* Full Name */}
                 <div className="form-group">
@@ -71,19 +61,16 @@ const SignUp = () => {
                 </div>
 
                 {/* Business Name (Optional) */}
-                {userType === "business" && (
-                    <div className="form-group">
-                        <label>
-                            Business Name:
-                            <input
-                                type="text"
-                                value={businessName}
-                                onChange={(e) => setBusinessName(e.target.value)}
-                                required
-                            />
-                        </label>
-                    </div>
-                )}
+                <div className="form-group">
+                    <label>
+                        Business Name (Optional):
+                        <input
+                            type="text"
+                            value={businessName}
+                            onChange={(e) => setBusinessName(e.target.value)}
+                        />
+                    </label>
+                </div>
 
                 {/* Address */}
                 <div className="form-group">
