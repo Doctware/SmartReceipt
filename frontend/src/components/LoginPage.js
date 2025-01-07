@@ -1,14 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Auth.css"; // Optional for custom styles
 import logo from "./assets/logo.jpg"; // Correctly importing the logo
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
     const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
-    const handleLoginPage = (event) => {
+    const handleLoginPage = async (event) => {
         event.preventDefault(); // Prevent form submission
-        navigate("/UserDashboard"); // Navigate to the UserDashboard page
+
+        try {
+            const response = await fetch("http://localhost:5000/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                // Save the JWT token in localStorage or sessionStorage
+                localStorage.setItem("accessToken", data.access_token);
+                // Navigate to the user dashboard
+                navigate("/UserDashboard");
+            } else {
+                // Handle invalid credentials or errors
+                const errorData = await response.json();
+                setErrorMessage(errorData.error || "Login failed. Please try again.");
+            }
+        } catch (error) {
+            // Handle network errors
+            setErrorMessage("An error occurred while connecting to the server. Please try again.");
+        }
     };
 
     return (
@@ -29,6 +56,11 @@ const LoginPage = () => {
                 <div className="col-md-6 d-flex flex-column align-items-center justify-content-center">
                     <h2 className="mb-4">Login</h2>
                     <form className="w-75" onSubmit={handleLoginPage}>
+                        {errorMessage && (
+                            <div className="alert alert-danger" role="alert">
+                                {errorMessage}
+                            </div>
+                        )}
                         <div className="mb-3">
                             <label htmlFor="email" className="form-label">
                                 Email address
@@ -38,6 +70,9 @@ const LoginPage = () => {
                                 className="form-control"
                                 id="email"
                                 placeholder="Enter your email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
                             />
                         </div>
                         <div className="mb-3">
@@ -49,6 +84,9 @@ const LoginPage = () => {
                                 className="form-control"
                                 id="password"
                                 placeholder="Enter your password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
                             />
                         </div>
                         <button type="submit" className="btn btn-primary w-100">
