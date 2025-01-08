@@ -24,13 +24,14 @@ class Receipt(db.Model):
     seller_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
 
     def __init__(
-            self, item_name, amount, description, buyer_name, address, seller_id, business_name=None
+            self, item_name, amount, description,date_sold, buyer_name, address, seller_id, business_name=None
             ):
         """ insialzing provided input """
 
         self.item_name = item_name
         self.amount = amount
         self.description = description
+        self.date_sold = date_sold
         buyer_name=buyer_name
         self.address= address
         self.seller_id = seller_id
