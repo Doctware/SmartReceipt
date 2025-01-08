@@ -17,6 +17,7 @@ class Receipt(db.Model):
     business_name = db.Column(db.String(120), nullable=True)
     address = db.Column(db.String(250), nullable=False)
     access_code = db.Column(db.String(8), unique=True, nullable=False)
+    buyer_name = db.Column(db.String(120), nullable=False)
     buyer_signature = db.Column(db.String(120), nullable=True)
     locked = db.Column(db.Boolean, default=False, nullable=False)
 

@@ -20,7 +20,7 @@ limiter = Limiter(key_func=get_remote_address)
 def create_receipt():
     """ creating new receipt """
     data = request.get_json()
-    required_fields = ['item_name', 'amount', 'address', 'seller_id']
+    required_fields = ['item_name', 'amount', 'address', 'buyer_name', 'seller_id']
 
     # validate require field
     for field in required_fields:
@@ -31,6 +31,7 @@ def create_receipt():
     amount = data.get('amount')
     description = data.get('description', None)
     address = data.get('address')
+    buyer_name = data.get('buyer_name')
     seller_id = data.get('seller_id')
     business_name = data.get('business_name')
 
@@ -46,6 +47,7 @@ def create_receipt():
                 amount=amount,
                 description=description,
                 address=address,
+                buyer_name=buyer_name,
                 seller_id=seller_id,
                 business_name=business_name
         )
