@@ -25,7 +25,7 @@ def create_receipt():
     # validate require field
     for field in required_fields:
         if field not in data or not data[field]:
-            return jsonify({"error": f"Misding field or empty: {field}"}), 400
+            return jsonify({"error": f"Missing field or empty: {field}"}), 400
 
     item_name = data.get('item_name')
     amount = data.get('amount')
@@ -36,7 +36,7 @@ def create_receipt():
     # validating user existence
     seller = User.query.get(seller_id)
     if not seller:
-        return jsonify({"error": "Ops!! your'e not a smart user"})
+        return jsonify({"error": "Ops!! your'e not a smart user"}), 400
 
     # now creating receipt if above condtions met
     try:
@@ -51,7 +51,7 @@ def create_receipt():
         db.session.commit()
 
         return jsonify({
-            "message": "Smart!!, Reciept, created successfully",
+            "message": "Smart!!, Receipt, created successfully",
             "receipt_id": receipt.id,
             "access_code": receipt.access_code
         }), 201
@@ -83,7 +83,7 @@ def view_receipt(access_code):
 @limiter.limit('10 per minute')
 @receipt_bp.route('/receipt/lock/<access_code>', methods=['PATCH'])
 @jwt_required()
-def lock_recept(access_code):
+def lock_receipt(access_code):
     """ this function is use to lock the receipt """
     receipt = Receipt.query.filter_by(access_code=access_code).first()
 
