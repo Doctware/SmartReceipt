@@ -1,4 +1,4 @@
-# smartReceipt
+# SmartReceipt
 
 smartReceipt is a cutting-edge digital receipt management system designed to simplify and modernize the way receipts are handled. It provides an intuitive user interface powered by React.js and a robust backend developed with Python and Flask. 
 
@@ -6,7 +6,7 @@ This system allows businesses to generate, store, and manage digital receipts, o
 
 ---
 
-## Table of Contents
+## 📚 Table of Contents
 
 - [About the Project](#about-the-project)
 - [Features](#features)
@@ -32,7 +32,7 @@ smartReceipt is aimed at providing businesses and customers with a seamless way 
 
 ---
 
-## Features
+## ⭐ Features
 
 - **Digital Receipt Generation:** Issue receipts directly to customer emails or mobile devices.
 - **Receipt Storage:** Centralized storage of receipts for easy access and management.
@@ -41,9 +41,9 @@ smartReceipt is aimed at providing businesses and customers with a seamless way 
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-### Frontend:
+###  Frontend:
 - React.js
 - HTML/CSS
 - JavaScript
@@ -59,7 +59,7 @@ smartReceipt is aimed at providing businesses and customers with a seamless way 
 
 ---
 
-## Installation
+## 📥 Installation
 
 ### Prerequisites:
 
@@ -70,7 +70,7 @@ smartReceipt is aimed at providing businesses and customers with a seamless way 
 
 ---
 
-## Running the Project
+## 🚀 Running the Project
 
 ### Backend Setup
 
@@ -147,7 +147,7 @@ smartReceipt is aimed at providing businesses and customers with a seamless way 
 
 ---
 
-## Usage
+## 📖 Usage
 
 1. Open the frontend in your browser: `http://localhost:3000`.
 2. Register as a new user.
@@ -160,7 +160,7 @@ smartReceipt is aimed at providing businesses and customers with a seamless way 
 
 ---
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please follow these steps:
 
@@ -181,7 +181,7 @@ Contributions are welcome! Please follow these steps:
 
 ---
 
-## License
+## 🔐 License
 
 This project is licensed under the MIT License. See the `LICENSE` file for more details.
 
