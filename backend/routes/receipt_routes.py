@@ -46,6 +46,7 @@ def create_receipt():
                 item_name=item_name,
                 amount=amount,
                 description=description,
+                date_sold=date_sold,
                 address=address,
                 buyer_name=buyer_name,
                 seller_id=seller_id,
@@ -55,9 +56,18 @@ def create_receipt():
         db.session.commit()
 
         return jsonify({
-            "message": "Smart!!, Receipt, created successfully",
+            "message": "Smart!!, Receipt created successfully",
+            "item_name": receipt.item_name,
+            "amount": receipt.amount,
+            "description": receipt.description,
+            "date_sold": receipt.date_sold,
+            "address": receipt.address,
+            "buyer_name": receipt.buyer_name,
+            "seller_id": receipt.seller_id,
+            "business_name": receipt_business_name
             "receipt_id": receipt.id,
             "access_code": receipt.access_code
+            ""
         }), 201
 
     except Exception as err:
