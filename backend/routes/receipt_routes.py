@@ -30,6 +30,7 @@ def create_receipt():
     item_name = data.get('item_name')
     amount = data.get('amount')
     description = data.get('description', None)
+    date_sold = data.get('date_sold',)
     address = data.get('address')
     buyer_name = data.get('buyer_name')
     seller_id = data.get('seller_id')
@@ -55,7 +56,7 @@ def create_receipt():
         db.session.add(receipt)
         db.session.commit()
 
-        return jsonify({
+        return jsonify ({
             "message": "Smart!!, Receipt created successfully",
             "item_name": receipt.item_name,
             "amount": receipt.amount,
@@ -64,10 +65,10 @@ def create_receipt():
             "address": receipt.address,
             "buyer_name": receipt.buyer_name,
             "seller_id": receipt.seller_id,
-            "business_name": receipt_business_name
+            "business_name": business_name,
             "receipt_id": receipt.id,
-            "access_code": receipt.access_code
-            ""
+            "access_code": receipt.access_code,
+            
         }), 201
 
     except Exception as err:
