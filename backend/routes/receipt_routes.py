@@ -29,6 +29,7 @@ def create_receipt():
 
     item_name = data.get('item_name')
     amount = data.get('amount')
+    description = data.get('description', None)
     address = data.get('address')
     seller_id = data.get('seller_id')
     business_name = data.get('business_name')
@@ -43,6 +44,7 @@ def create_receipt():
         receipt = Receipt(
                 item_name=item_name,
                 amount=amount,
+                description=description,
                 address=address,
                 seller_id=seller_id,
                 business_name=business_name
