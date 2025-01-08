@@ -20,6 +20,8 @@ class Receipt(db.Model):
     buyer_name = db.Column(db.String(120), nullable=False)
     buyer_signature = db.Column(db.String(120), nullable=True)
     locked = db.Column(db.Boolean, default=False, nullable=False)
+    buyer_signature = db.Column(db.Text, nullable=True)  # Change to Text to store the full base64 string
+
 
     seller_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
 
