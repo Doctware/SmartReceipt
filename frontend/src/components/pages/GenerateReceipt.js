@@ -1,17 +1,18 @@
-import React, { useState } from "react";
-import Receipt from "./Receipt";
+import React, { useState, useRef } from "react";
+import SignatureCanvas from "react-signature-canvas"; // Make sure to install this package
 import "./GenerateReceipt.css";
 
 const GenerateReceipt = () => {
+    const sigCanvas = useRef(null);
     const [formData, setFormData] = useState({
-        buyerName: "",
-        productName: "",
+        buyer_name: "",
+        item_name: "",
         amount: "",
         description: "",
         address: "",
-        sellerId: "", // Assuming seller ID will be passed or fetched
+        seller_id: "",
+        buyer_signature: "", // Signature will be stored here as base64 string
     });
-
     const [receiptData, setReceiptData] = useState(null);
     const [showReceipt, setShowReceipt] = useState(false);
     const [error, setError] = useState("");
@@ -21,17 +22,26 @@ const GenerateReceipt = () => {
         setFormData({ ...formData, [name]: value });
     };
 
+    // Handle signature change
+    const handleSignature = () => {
+        const signature = sigCanvas.current.toDataURL(); // Get base64 encoded image
+        setFormData({ ...formData, buyer_signature: signature });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
 
         // Construct payload for the backend
         const payload = {
-            item_name: formData.productName,
+            item_name: formData.item_name,
             amount: parseFloat(formData.amount),
+            description: formData.description,
             address: formData.address,
+            buyer_name: formData.buyer_name,
+            buyer_signature: formData.buyer_signature || null, // Send signature if available
+            seller_id: formData.seller_id,
             business_name: "Smart Receipt Inc.", // Static or dynamic as required
-            seller_id: formData.sellerId, // Replace with actual seller ID
         };
 
         try {
@@ -99,16 +109,20 @@ const GenerateReceipt = () => {
         <div className="generate-receipt">
             {showReceipt ? (
                 <div>
-                    <Receipt
-                        buyer={formData.buyerName}
-                        productName={formData.productName}
-                        amount={parseFloat(formData.amount)}
-                        description={formData.description}
-                        onBack={handleBack}
-                    />
-                    <button onClick={handleLockReceipt} className="btn btn-lock">
-                        Lock Receipt
-                    </button>
+                    <h3>Receipt</h3>
+                    <div>Item Name: {receiptData.item_name}</div>
+                    <div>Amount: ${receiptData.amount}</div>
+                    <div>Description: {receiptData.description}</div>
+                    <div>Address: {receiptData.address}</div>
+                    <div>Buyer Name: {receiptData.buyer_name}</div>
+                    {receiptData.buyer_signature && (
+                        <div>
+                            <h4>Buyer's Signature</h4>
+                            <img src={receiptData.buyer_signature} alt="Buyer's Signature" width="200" />
+                        </div>
+                    )}
+                    <button onClick={handleLockReceipt}>Lock Receipt</button>
+                    <button onClick={handleBack}>Back</button>
                 </div>
             ) : (
                 <form onSubmit={handleSubmit}>
@@ -118,17 +132,17 @@ const GenerateReceipt = () => {
                     <label>Buyer's Name</label>
                     <input
                         type="text"
-                        name="buyerName"
-                        value={formData.buyerName}
+                        name="buyer_name"
+                        value={formData.buyer_name}
                         onChange={handleChange}
                         required
                     />
 
-                    <label>Product Name</label>
+                    <label>Item Name</label>
                     <input
                         type="text"
-                        name="productName"
-                        value={formData.productName}
+                        name="item_name"
+                        value={formData.item_name}
                         onChange={handleChange}
                         required
                     />
@@ -162,13 +176,23 @@ const GenerateReceipt = () => {
                     <label>Seller ID</label>
                     <input
                         type="text"
-                        name="sellerId"
-                        value={formData.sellerId}
+                        name="seller_id"
+                        value={formData.seller_id}
                         onChange={handleChange}
                         required
                     />
 
-                    <button type="submit">Generate</button>
+                    <div>
+                        <h3>Signature</h3>
+                        <SignatureCanvas
+                            ref={sigCanvas}
+                            penColor="black"
+                            canvasProps={{ width: 500, height: 200, className: 'signature-canvas' }}
+                        />
+                        <button type="button" onClick={handleSignature}>Capture Signature</button>
+                    </div>
+
+                    <button type="submit">Generate Receipt</button>
                 </form>
             )}
         </div>

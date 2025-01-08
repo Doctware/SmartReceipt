@@ -18,11 +18,11 @@ limiter = Limiter(key_func=get_remote_address)
 @receipt_bp.route('/create', methods=['POST'])
 @jwt_required()
 def create_receipt():
-    """ creating new receipt """
+    """ Creating new receipt """
     data = request.get_json()
     required_fields = ['item_name', 'amount', 'address', 'buyer_name', 'seller_id']
 
-    # validate require field
+    # Validate required fields
     for field in required_fields:
         if field not in data or not data[field]:
             return jsonify({"error": f"Missing field or empty: {field}"}), 400
@@ -30,47 +30,48 @@ def create_receipt():
     item_name = data.get('item_name')
     amount = data.get('amount')
     description = data.get('description', None)
-    date_sold = data.get('date_sold',)
+    date_sold = data.get('date_sold', datetime.utcnow())
     address = data.get('address')
     buyer_name = data.get('buyer_name')
     seller_id = data.get('seller_id')
+    buyer_signature = data.get('buyer_signature', None)  # New field to capture the signature
     business_name = data.get('business_name')
 
-    # validating user existence
+    # Validate user existence
     seller = User.query.get(seller_id)
     if not seller:
-        return jsonify({"error": "Ops!! your'e not a smart user"}), 400
+        return jsonify({"error": "Seller does not exist"}), 400
 
-    # now creating receipt if above condtions met
     try:
         receipt = Receipt(
-                item_name=item_name,
-                amount=amount,
-                description=description,
-                date_sold=date_sold,
-                address=address,
-                buyer_name=buyer_name,
-                seller_id=seller_id,
-                business_name=business_name
+            item_name=item_name,
+            amount=amount,
+            description=description,
+            date_sold=date_sold,
+            address=address,
+            buyer_name=buyer_name,
+            seller_id=seller_id,
+            business_name=business_name,
+            buyer_signature=buyer_signature  # Save the signature
         )
         db.session.add(receipt)
         db.session.commit()
 
-        return jsonify ({
-            "message": "Smart!!, Receipt created successfully",
-            "item_name": receipt.item_name,
-            "amount": receipt.amount,
-            "description": receipt.description,
-            "date_sold": receipt.date_sold,
-            "address": receipt.address,
-            "buyer_name": receipt.buyer_name,
-            "seller_id": receipt.seller_id,
-            "business_name": business_name,
-            "receipt_id": receipt.id,
-            "access_code": receipt.access_code,
-            
+        return jsonify({
+            "message": "Receipt created successfully!",
+            "receipt": {
+                "id": receipt.id,
+                "item_name": receipt.item_name,
+                "amount": receipt.amount,
+                "description": receipt.description,
+                "date_sold": receipt.date_sold,
+                "address": receipt.address,
+                "buyer_name": receipt.buyer_name,
+                "buyer_signature": receipt.buyer_signature,  # Include signature in response
+                "business_name": business_name,
+                "access_code": receipt.access_code
+            }
         }), 201
-
     except Exception as err:
         db.session.rollback()
         return jsonify({"error": str(err)}), 500
