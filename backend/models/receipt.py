@@ -12,6 +12,7 @@ class Receipt(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=str(uuid.uuid4()))
     item_name = db.Column(db.String(120), nullable=False)
     amount = db.Column(db.Integer, nullable=False)
+    description = db.Column(db.String(200), nullable=True)
     date_sold = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     business_name = db.Column(db.String(120), nullable=True)
     address = db.Column(db.String(250), nullable=False)
@@ -21,11 +22,12 @@ class Receipt(db.Model):
 
     seller_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
 
-    def __init__(self, item_name, amount, address, seller_id, business_name=None):
+    def __init__(self, item_name, amount, description, address, seller_id, business_name=None):
         """ insialzing provided input """
 
         self.item_name = item_name
         self.amount = amount
+        self.description = description
         self.address= address
         self.seller_id = seller_id
         self.businaess_name = business_name
