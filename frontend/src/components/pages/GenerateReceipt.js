@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import SignatureCanvas from "react-signature-canvas"; // Make sure to install this package
+import SignatureCanvas from "react-signature-canvas"; // Ensure this package is installed
 import "./GenerateReceipt.css";
 
 const GenerateReceipt = () => {
@@ -24,7 +24,7 @@ const GenerateReceipt = () => {
 
     // Handle signature change
     const handleSignature = () => {
-        const signature = sigCanvas.current.toDataURL(); // Get base64 encoded image
+        const signature = sigCanvas.current.toDataURL("image/png"); // Base64 encoded image
         setFormData({ ...formData, buyer_signature: signature });
     };
 
@@ -35,18 +35,18 @@ const GenerateReceipt = () => {
         // Construct payload for the backend
         const payload = {
             item_name: formData.item_name,
-            amount: parseFloat(formData.amount),
-            description: formData.description,
+            amount: parseFloat(formData.amount), // Backend expects a float
+            description: formData.description || null,
             address: formData.address,
             buyer_name: formData.buyer_name,
-            buyer_signature: formData.buyer_signature || null, // Send signature if available
+            buyer_signature: formData.buyer_signature || null, // Include signature
             seller_id: formData.seller_id,
             business_name: "Smart Receipt Inc.", // Static or dynamic as required
         };
 
         try {
             // API call to create receipt
-            const response = await fetch("http://localhost:5000/receipts/create", {
+            const response = await fetch("http://localhost:5003/api/v1s.0/receipt/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -62,7 +62,7 @@ const GenerateReceipt = () => {
             }
 
             // Store receipt data
-            setReceiptData(data);
+            setReceiptData(data.receipt); // Use `receipt` from the backend response
             setShowReceipt(true);
         } catch (err) {
             setError(err.message);
@@ -78,7 +78,7 @@ const GenerateReceipt = () => {
         try {
             // API call to lock the receipt
             const response = await fetch(
-                `http://localhost:5000/receipts/lock/${receiptData.access_code}`,
+                `http://localhost:5003/api/v1s.0/receipt/lock/${receiptData.access_code}`,
                 {
                     method: "PATCH",
                     headers: {

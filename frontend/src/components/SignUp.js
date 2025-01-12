@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Auth.css"; // Use the same CSS for Login and SignUp
+import "./SignUp.css"
 import axios from "axios";
 import logo from "./assets/logo.jpg"; // Correctly importing the logo
 
@@ -17,7 +18,7 @@ const SignUp = () => {
         event.preventDefault();
 
         if (password !== confirmPassword) {
-            setError("Passwords do not match");
+            setError("Passwords do not match ");
             return;
         }
 
@@ -36,7 +37,11 @@ const SignUp = () => {
             });
             alert(response.data.message); // Show success message
         } catch (error) {
-            console.error(error);
+		if (error.response && error.response.data) {
+			alert(error.response.data.error)
+		} else {
+			alert("Ow!! unknown error are you connected!?")
+		}
             setError("Failed to register. Please try again.");
         }
     };
@@ -141,7 +146,7 @@ const SignUp = () => {
 
                 <button type="submit" className="auth-button">Sign Up</button>
             </form>
-            <p className="login-option">
+            <p className="signup-button">
                 Already have an account? <a href="/LoginPage" className="login-link">Login</a>
             </p>
         </div>
