@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ this module contains the receipt rout """
 from flask import Blueprint, jsonify, request
+from datetime import datetime
 from flask_limiter.util import get_remote_address
 from flask_limiter import Limiter
 from models.receipt import Receipt
@@ -10,7 +11,7 @@ import uuid
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
-receipt_bp = Blueprint('receipt_bp', __name__)
+receipt_bp = Blueprint('receipt_bp', __name__, url_prefix='/api/v1s.0/receipt')
 limiter = Limiter(key_func=get_remote_address)
 
 
@@ -20,6 +21,7 @@ limiter = Limiter(key_func=get_remote_address)
 def create_receipt():
     """ Creating new receipt """
     data = request.get_json()
+    print("Received data: ", data)
     required_fields = ['item_name', 'amount', 'address', 'buyer_name', 'seller_id']
 
     # Validate required fields
@@ -115,4 +117,5 @@ def lock_receipt(access_code):
         db.session.commit()
         return jsonify({"message": "Receipt Locked successfully"}), 200
     except Exception as err:
+        db.aession.rollback()
         return jsonify({"error": str(err)}), 500

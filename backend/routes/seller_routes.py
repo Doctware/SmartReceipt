@@ -19,7 +19,7 @@ def register_seller():
     form = RegistrationForm(data=request.json)
 
     if not form.validate():
-        return jsonify({"error": "Ow!! input not valid", "detail": form.errors}), 400
+        return jsonify({"error": "Ow!! input not valid ⛔", "detail": form.errors}), 400
 
     """ extrating field """
     full_name = form.full_name.data
@@ -31,7 +31,7 @@ def register_seller():
 
     """ checking if emial not on database already """
     if User.query.filter_by(email=email).first():
-        return jsonify({"error": "oops! we have your email already"}), 409
+        return jsonify({"error": "oops! we have your email already 🤩"}), 409
 
     """ now creating user account if no exception"""
     try:
@@ -47,7 +47,7 @@ def register_seller():
         user.set_password(passwd)
         db.session.add(user)
         db.session.commit()
-        return jsonify({"message": "Success you're now a smart user!!"}), 201
+        return jsonify({"message": "Success you're now a smart user!! ✅"}), 201
     except Exception as err:
         db.session.rollback()
         return jsonify({"error": str(err)}), 500

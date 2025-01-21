@@ -28,7 +28,7 @@ def create_app():
     jwt.init_app(app)
     bcrypt.init_app(app)
     limiter.init_app(app)
-    CORS(app)
+    CORS(app, resources={r"/api/v1s.0/*": {"origins": "*"}})
     login_manager.init_app(app)
     login_manager.login_view = 'auth_bp.login'
 
