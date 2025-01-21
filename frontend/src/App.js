@@ -14,6 +14,7 @@ import PrivateRoute from "./components/PrivateRoute";
 
 
 const APP = () => {
+  const isAuthenticated = !!localStorage.getItem("accessToken"); //checks if teh user is authenticated
   return (
     <Router>
       <Navbar></Navbar>
@@ -22,13 +23,13 @@ const APP = () => {
           <Route path="/" element={<LoginPage></LoginPage>}></Route>
           <Route path="/signup" element={<SignUp></SignUp>}></Route>
           <Route path="/loginpage" element={<LoginPage></LoginPage>}></Route>
-          <Route path="/UserDashboard" element={<PrivateRoute element={UserDashboard} />} />
+          <Route path="/UserDashboard" element={<PrivateRoute component={UserDashboard} isAuthenticated={isAuthenticated} />} />
           <Route path="/header" element={<Header></Header>} />
           <Route path="/logout" element={<Navigate to="/" replace />} onEnter={() => {
             localStorage.clear();
           }} />
-          <Route path="/generate-receipt" element={<GenerateReceipt></GenerateReceipt>} />
-          <Route path="/profile" element={<Profile></Profile>} />
+          <Route path="/generate-receipt" element={<PrivateRoute component={GenerateReceipt} isAuthenticated={isAuthenticated}/>} />
+          <Route path="/profile" element={<PrivateRoute component={Profile} isAuthenticated={isAuthenticated}/>} />
         </Routes>
       </div>
       <Footer></Footer>
