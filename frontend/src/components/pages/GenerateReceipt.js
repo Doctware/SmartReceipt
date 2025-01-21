@@ -11,46 +11,79 @@ const GenerateReceipt = () => {
         description: "",
         address: "",
         seller_id: "",
-        buyer_signature: "", // Signature will be stored here as base64 string
+        buyer_signature: "",
     });
     const [receiptData, setReceiptData] = useState(null);
     const [showReceipt, setShowReceipt] = useState(false);
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    // Handle signature change
     const handleSignature = () => {
-        const signature = sigCanvas.current.toDataURL("image/png"); // Base64 encoded image
+        if (sigCanvas.current.isEmpty()) {
+            setError("Please provide a valid signature.");
+            return;
+        }
+        const signature = sigCanvas.current.toDataURL("image/png");
         setFormData({ ...formData, buyer_signature: signature });
+        setError(""); // Clear error if signature is valid
+    };
+
+    const validatePayload = () => {
+        if (
+            !formData.buyer_name ||
+            !formData.item_name ||
+            !formData.amount ||
+            !formData.address ||
+            !formData.seller_id
+        ) {
+            setError("All fields are required except description.");
+            return false;
+        }
+
+        if (isNaN(formData.amount) || parseFloat(formData.amount) <= 0) {
+            setError("Amount must be a valid number greater than 0.");
+            return false;
+        }
+
+        if (!formData.buyer_signature) {
+            setError("Buyer signature is required.");
+            return false;
+        }
+
+        return true;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
 
-        // Construct payload for the backend
+        if (!validatePayload()) {
+            return;
+        }
+
         const payload = {
-            item_name: formData.item_name,
-            amount: parseFloat(formData.amount), // Backend expects a float
-            description: formData.description || null,
-            address: formData.address,
-            buyer_name: formData.buyer_name,
-            buyer_signature: formData.buyer_signature || null, // Include signature
-            seller_id: formData.seller_id,
-            business_name: "Smart Receipt Inc.", // Static or dynamic as required
+            item_name: formData.item_name.trim(),
+            amount: parseFloat(formData.amount),
+            description: formData.description.trim() || null,
+            address: formData.address.trim(),
+            buyer_name: formData.buyer_name.trim(),
+            buyer_signature: formData.buyer_signature,
+            seller_id: formData.seller_id.trim(),
         };
 
+        setLoading(true);
+
         try {
-            // API call to create receipt
             const response = await fetch("http://localhost:5003/api/v1s.0/receipt/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`, // Pass JWT if required
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
                 body: JSON.stringify(payload),
             });
@@ -61,11 +94,12 @@ const GenerateReceipt = () => {
                 throw new Error(data.error || "Failed to create receipt.");
             }
 
-            // Store receipt data
-            setReceiptData(data.receipt); // Use `receipt` from the backend response
+            setReceiptData(data.receipt);
             setShowReceipt(true);
         } catch (err) {
             setError(err.message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -76,14 +110,13 @@ const GenerateReceipt = () => {
         }
 
         try {
-            // API call to lock the receipt
             const response = await fetch(
                 `http://localhost:5003/api/v1s.0/receipt/lock/${receiptData.access_code}`,
                 {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${localStorage.getItem("token")}`, // Pass JWT if required
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
                     },
                 }
             );
@@ -105,14 +138,19 @@ const GenerateReceipt = () => {
         setReceiptData(null);
     };
 
+    const clearSignature = () => {
+        sigCanvas.current.clear();
+        setFormData({ ...formData, buyer_signature: "" });
+    };
+
     return (
         <div className="generate-receipt">
             {showReceipt ? (
                 <div>
                     <h3>Receipt</h3>
                     <div>Item Name: {receiptData.item_name}</div>
-                    <div>Amount: ${receiptData.amount}</div>
-                    <div>Description: {receiptData.description}</div>
+                    <div>Amount: ${receiptData.amount.toFixed(2)}</div>
+                    <div>Description: {receiptData.description || "N/A"}</div>
                     <div>Address: {receiptData.address}</div>
                     <div>Buyer Name: {receiptData.buyer_name}</div>
                     {receiptData.buyer_signature && (
@@ -153,6 +191,7 @@ const GenerateReceipt = () => {
                         name="amount"
                         value={formData.amount}
                         onChange={handleChange}
+                        step="0.01"
                         required
                     />
 
@@ -161,7 +200,6 @@ const GenerateReceipt = () => {
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
-                        required
                     ></textarea>
 
                     <label>Address</label>
@@ -190,9 +228,12 @@ const GenerateReceipt = () => {
                             canvasProps={{ width: 500, height: 200, className: 'signature-canvas' }}
                         />
                         <button type="button" onClick={handleSignature}>Capture Signature</button>
+                        <button type="button" onClick={clearSignature}>Clear Signature</button>
                     </div>
 
-                    <button type="submit">Generate Receipt</button>
+                    <button type="submit" disabled={loading}>
+                        {loading ? "Generating..." : "Generate Receipt"}
+                    </button>
                 </form>
             )}
         </div>
