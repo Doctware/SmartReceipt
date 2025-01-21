@@ -6,10 +6,12 @@
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "cra-template": "1.2.0",
+    "express-session": "^1.18.1",
+    "js-cookie": "^3.0.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.1",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^3.0.1",
     "react-signature-canvas": "^1.0.6",
     "signature_pad": "^5.0.4"
   },

@@ -3,6 +3,7 @@ import "./Auth.css"; // Optional for custom styles
 import "./LoginPage.css"
 import logo from "./assets/logo.jpg"; // Correctly importing the logo
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -25,7 +26,7 @@ const LoginPage = () => {
             if (response.ok) {
                 const data = await response.json();
                 // Save the JWT token in localStorage or sessionStorage
-                localStorage.setItem("accessToken", data.access_token);
+                Cookies.set("accessToken", data.accessToken, { expires: 1 }); // Set cookie to expire in 1 day
                 // Navigate to the user dashboard
                 navigate("/UserDashboard");
             } else {
