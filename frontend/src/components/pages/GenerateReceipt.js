@@ -69,10 +69,12 @@ const GenerateReceipt = () => {
         const payload = {
             item_name: formData.item_name.trim(),
             amount: parseFloat(formData.amount),
-            description: formData.description.trim() || null,
+            description: formData.description.trim() || "",
             address: formData.address.trim(),
             buyer_name: formData.buyer_name.trim(),
-            buyer_signature: formData.buyer_signature,
+            buyer_signature: formData.buyer_signature.startsWith("data:image")
+		? formData.buyer_signature
+		: "_++_", // replace with signature for dibugging purppose
             seller_id: formData.seller_id.trim(),
         };
 
@@ -125,6 +127,7 @@ const GenerateReceipt = () => {
 
             if (!response.ok) {
                 throw new Error(data.error || "Failed to lock receipt.");
+		    console.log(data.error)
             }
 
             alert("Receipt locked successfully!");
