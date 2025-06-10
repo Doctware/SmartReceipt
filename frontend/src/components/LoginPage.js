@@ -13,9 +13,8 @@ const LoginPage = () => {
 
     const handleLoginPage = async (event) => {
         event.preventDefault(); // Prevent form submission
-	    //
         try {
-            const response = await fetch("http://localhost:5003/api/v1s.0/auth/login", {
+            const response = await fetch("To be update", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
